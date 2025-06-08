@@ -1,0 +1,272 @@
+clear all;
+bin=0.1; 
+lat=0; 
+repeat=30; 
+[f1,p1]=uigetfile('*.txt','CNO- or LED-');
+cd(p1);
+[a,b,c,d,e,f] = textread(f1,'%s%s%s%s%s%f','headerlines',1);
+if sum(f)-lat*1000<900000
+f(length(f)+1)=960000-sum(f);
+else
+end
+
+[ft,p2]=uigetfile('*.txt','CNO+ or LED+');
+cd(p2);
+[a2,b2,c2,d2,e2,f2] = textread(ft,'%s%s%s%s%s%f','headerlines',1);
+if sum(f2)-lat*1000<900000
+f2(length(f2)+1)=960000-sum(f2);
+else
+end
+
+k(1)=0;
+for i=1:length(f)-1
+k(i+1)=f(i+1)+k(i);
+end
+k=k/1000;
+sh=floor(max(k))+1;
+kbins=0:bin:sh;
+h=hist(k,kbins);
+h=0.02*h/bin; 
+x=[bin:bin:length(h)*bin];
+
+if lat==0
+for i=1:30;
+if i>1
+www(i,:)=h((i-1)*(repeat/bin)-5/bin:(i-1)*(repeat/bin)+15/bin);
+else
+www(i,1:5/bin)=  zeros(1,5/bin);
+www(i,5/bin+1:20/bin+1)=h((i-1)*(repeat/bin)+1:(i-1)*(repeat/bin)+15/bin+1);
+end
+end
+else
+for i=1:30;
+www(i,:)=h((i-1)*(repeat/bin)-5/bin+lat/bin:(i-1)*(repeat/bin)+15/bin+lat/bin);
+end
+end
+aaa=www;[m n]=size(aaa); aaa(m+1,n+1)=0;
+
+k2(1)=0;
+for i=1:length(f2)-1
+k2(i+1)=f2(i+1)+k2(i);
+end
+k2=k2/1000;
+sh2=floor(max(k2))+1;
+kbins2=0:bin:sh2;
+h2=hist(k2,kbins2);
+h2=0.02*h2/bin; 
+x2=[bin:bin:length(h2)*bin];
+
+
+if lat==0
+for i=1:30;
+if i>1
+www2(i,:)=h2((i-1)*(repeat/bin)-5/bin:(i-1)*(repeat/bin)+15/bin);
+else
+www2(i,1:5/bin)=  zeros(1,5/bin);
+www2(i,5/bin+1:20/bin+1)=h2((i-1)*(repeat/bin)+1:(i-1)*(repeat/bin)+15/bin+1);
+end
+end
+else
+for i=1:30;
+www2(i,:)=h2((i-1)*(repeat/bin)-5/bin+lat/bin:(i-1)*(repeat/bin)+15/bin+lat/bin);
+end
+end
+aaa2=www2;[m n]=size(aaa2); aaa2(m+1,n+1)=0;
+
+cmax=max([max(max(aaa)),max(max(aaa2))]);
+
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,31],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[f1(1:end) '01.emf'])
+sound(1,:)=www(1,:);
+sound(2,:)=www(4,:);
+sound(3,:)=www(8,:);
+sound(4,:)=www(12,:);
+sound(5,:)=www(15,:);
+sound(6,:)=www(16,:);
+sound(7,:)=www(19,:);
+sound(8,:)=www(23,:);
+sound(9,:)=www(27,:);
+sound(10,:)=www(30,:);
+light(1,:)=www(2,:);
+light(2,:)=www(6,:);
+light(3,:)=www(7,:);
+light(4,:)=www(11,:);
+light(5,:)=www(13,:);
+light(6,:)=www(17,:);
+light(7,:)=www(21,:);
+light(8,:)=www(22,:);
+light(9,:)=www(26,:);
+light(10,:)=www(29,:);
+air(1,:)=www(3,:);
+air(2,:)=www(5,:);
+air(3,:)=www(9,:);
+air(4,:)=www(10,:);
+air(5,:)=www(14,:);
+air(6,:)=www(18,:);
+air(7,:)=www(20,:);
+air(8,:)=www(24,:);
+air(9,:)=www(25,:);
+air(10,:)=www(28,:);
+
+aaa=sound;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[f1(1:end) '02.emf'])
+aaa=light;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[f1(1:end) '03.emf'])
+aaa=air;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[f1(1:end) '04.emf'])
+
+figure()
+pcolor(aaa2)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,31],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[ft(1:end) '05.emf'])
+sound2(1,:)=www2(1,:);
+sound2(2,:)=www2(4,:);
+sound2(3,:)=www2(8,:);
+sound2(4,:)=www2(12,:);
+sound2(5,:)=www2(15,:);
+sound2(6,:)=www2(16,:);
+sound2(7,:)=www2(19,:);
+sound2(8,:)=www2(23,:);
+sound2(9,:)=www2(27,:);
+sound2(10,:)=www2(30,:);
+light2(1,:)=www2(2,:);
+light2(2,:)=www2(6,:);
+light2(3,:)=www2(7,:);
+light2(4,:)=www2(11,:);
+light2(5,:)=www2(13,:);
+light2(6,:)=www2(17,:);
+light2(7,:)=www2(21,:);
+light2(8,:)=www2(22,:);
+light2(9,:)=www2(26,:);
+light2(10,:)=www2(29,:);
+air2(1,:)=www2(3,:);
+air2(2,:)=www2(5,:);
+air2(3,:)=www2(9,:);
+air2(4,:)=www2(10,:);
+air2(5,:)=www2(14,:);
+air2(6,:)=www2(18,:);
+air2(7,:)=www2(20,:);
+air2(8,:)=www2(24,:);
+air2(9,:)=www2(25,:);
+air2(10,:)=www2(28,:);
+
+aaa2=sound2;[m n]=size(aaa2); aaa2(m+1,n+1)=0;
+figure()
+pcolor(aaa2)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[ft(1:end) '06.emf'])
+aaa2=light2;[m n]=size(aaa2); aaa2(m+1,n+1)=0;
+figure()
+pcolor(aaa2)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[ft(1:end) '07.emf'])
+aaa2=air2;[m n]=size(aaa2); aaa2(m+1,n+1)=0;
+figure()
+pcolor(aaa2)
+shading flat
+axis off
+hold on
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+caxis([0 cmax])
+colorbar
+saveas(gcf,[ft(1:end) '08.emf'])
+soundmean=mean(sound);soundsem=std(sound)/(sqrt(size(sound,1)));
+lightmean=mean(light);lightsem=std(light)/(sqrt(size(light,1)));
+airmean=mean(air);airsem=std(air)/(sqrt(size(air,1)));
+sound2mean=mean(sound2);sound2sem=std(sound2)/(sqrt(size(sound2,1)));
+light2mean=mean(light2);light2sem=std(light2)/(sqrt(size(light2,1)));
+air2mean=mean(air2);air2sem=std(air2)/(sqrt(size(air2,1)));
+xs=[-5:0.1:15];
+figure()
+plot(xs,soundmean,xs,sound2mean,'LineWidth',2)
+title('Sound')
+xlabel('Time (s)')
+ylabel('Speed')
+legend('pre','post')
+hold on
+hh=fill([xs,fliplr(xs)],[soundmean-soundsem,fliplr(soundmean+soundsem)]...
+    ,'b','EdgeColor','none');
+set(hh,'edgealpha',0,'facealpha',0.05)
+hold on
+hh2=fill([xs,fliplr(xs)],[sound2mean-sound2sem,fliplr(sound2mean+sound2sem)]...
+    ,'r','EdgeColor','none');
+set(hh2,'edgealpha',0,'facealpha',0.05)
+saveas(gcf,[f1(1:end) '09.emf'])
+figure()
+plot(xs,lightmean,xs,light2mean,'LineWidth',2)
+title('Light')
+xlabel('Time (s)')
+ylabel('Speed')
+legend('pre','post')
+hold on
+hh=fill([xs,fliplr(xs)],[lightmean-lightsem,fliplr(lightmean+lightsem)]...
+    ,'b','EdgeColor','none');
+set(hh,'edgealpha',0,'facealpha',0.05)
+hold on
+hh2=fill([xs,fliplr(xs)],[light2mean-light2sem,fliplr(light2mean+light2sem)]...
+    ,'r','EdgeColor','none');
+set(hh2,'edgealpha',0,'facealpha',0.05)
+saveas(gcf,[f1(1:end) '10.emf'])
+figure()
+plot(xs,airmean,xs,air2mean,'LineWidth',2)
+title('Air')
+xlabel('Time (s)')
+ylabel('Speed')
+legend('pre','post')
+hold on
+hh=fill([xs,fliplr(xs)],[airmean-airsem,fliplr(airmean+airsem)]...
+    ,'b','EdgeColor','none');
+set(hh,'edgealpha',0,'facealpha',0.05)
+hold on
+hh2=fill([xs,fliplr(xs)],[air2mean-air2sem,fliplr(air2mean+air2sem)]...
+    ,'r','EdgeColor','none');
+set(hh2,'edgealpha',0,'facealpha',0.05)
+saveas(gcf,[f1(1:end) '11.emf'])
+save([f1(1:end) '.mat'],'sound','sound2','light','light2','air','air2')
+close all

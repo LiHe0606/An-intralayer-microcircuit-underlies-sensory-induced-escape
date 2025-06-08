@@ -1,0 +1,153 @@
+clc;
+clear all;
+bin=0.1; 
+lat=0; 
+repeat=30; 
+[f1 p1]=uigetfile('*.txt','select a text file');
+cd(p1);
+[a,b,c,d,e,f] = textread(f1,'%s%s%s%s%s%f','headerlines',1);
+k(1)=0;
+if sum(f)<450000
+    f(length(f)+1)=450000-sum(f);
+else
+end
+for i=1:length(f)-1
+    k(i+1)=f(i+1)+k(i);
+end
+k=k/1000;
+sh=floor(max(k))+1;
+kbins=0:bin:sh;
+h=hist(k,kbins);
+h=0.02*h/bin; 
+x=[bin:bin:length(h)*bin];
+figure()
+plot(x,h)
+ylabel('Speed');
+xlabel('Time (s)')
+if lat==0
+    for i=1:35;
+     if i>1
+     www(i,:)=h((i-1)*(repeat/bin)-5/bin:(i-1)*(repeat/bin)+15/bin);
+     else
+       www(i,1:5/bin)=  zeros(1,5/bin); 
+     www(i,5/bin+1:20/bin+1)=h((i-1)*(repeat/bin)+1:(i-1)*(repeat/bin)+15/bin+1);
+     end
+    end
+else
+for i=1:35;
+    www(i,:)=h((i-1)*(repeat/bin)-5/bin+lat/bin:(i-1)*(repeat/bin)+15/bin+lat/bin);
+end
+end
+aaa=www;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+sound(1,:)=www(1,:);
+sound(2,:)=www(13,:);
+sound(3,:)=www(20,:);
+sound(4,:)=www(23,:);
+sound(5,:)=www(34,:);
+
+light(1,:)=www(4,:);
+light(2,:)=www(8,:);
+light(3,:)=www(17,:);
+light(4,:)=www(24,:);
+light(5,:)=www(33,:);
+
+air(1,:)=www(3,:);
+air(2,:)=www(12,:);
+air(3,:)=www(16,:);
+air(4,:)=www(22,:);
+air(5,:)=www(31,:);
+
+sound and light(1,:)=www(2,:);
+sound and light(2,:)=www(11,:);
+sound and light(3,:)=www(15,:);
+sound and light(4,:)=www(25,:);
+sound and light(5,:)=www(29,:);
+
+sound and air(1,:)=www(6,:);
+sound and air(2,:)=www(10,:);
+sound and air(3,:)=www(19,:);
+sound and air(4,:)=www(27,:);
+sound and air(5,:)=www(30,:);
+
+light and air(1,:)=www(5,:);
+light and air(2,:)=www(9,:);
+light and air(3,:)=www(18,:);
+light and air4,:)=www(26,:);
+light and air5,:)=www(32,:);
+
+sound and air and light(1,:)=www(7,:);
+sound and air and light(2,:)=www(14,:);
+sound and air and light(3,:)=www(21,:);
+sound and air and light(4,:)=www(28,:);
+sound and air and light(5,:)=www(35,:);
+
+soundmean=mean(sound);
+lightmean=mean(light);
+airmean=mean(air);
+soundlightmean=mean(sound and light);
+soundairmean=mean(sound and air);
+lightairmean=mean(light and air);
+soundairlightmean=mean(sound and air and light);
+
+aaa=sound;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=light;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=air;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=sound and light;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=sound and air;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=light and air;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
+
+aaa=sound and air and light;[m n]=size(aaa); aaa(m+1,n+1)=0;
+figure()
+pcolor(aaa)
+shading flat
+axis off
+hold on 
+line([5/bin,5/bin],[0,16],'Color','r','LineWidth',0.5)
